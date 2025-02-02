@@ -1,0 +1,83 @@
+package com.davendra.buzzer.config;
+
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+
+import java.util.Arrays;
+import java.util.Collections;
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+
+    @Autowired
+    private JwtValidator jwtValidator;
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // will not make any session in the server instead take token including username and password
+                .csrf(AbstractHttpConfigurer::disable)
+                .httpBasic(Customizer.withDefaults())
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/v1/auth/**")
+                        .permitAll()
+                        .requestMatchers("/api/v1/**")
+                        .authenticated()
+                        .anyRequest()
+                        .permitAll()
+                )
+                .addFilterBefore(jwtValidator, BasicAuthenticationFilter.class)
+                .cors(cors -> cors.configurationSource(corsConfigSource()))
+        ;
+        return httpSecurity.build();
+    }
+
+    private CorsConfigurationSource corsConfigSource() {
+        return new CorsConfigurationSource() {
+            @Override
+            public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+                CorsConfiguration corsConfiguration = new CorsConfiguration();
+                corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+                corsConfiguration.setAllowedMethods(Collections.singletonList("*"));
+                corsConfiguration.setAllowCredentials(true);
+                corsConfiguration.setAllowedHeaders(Collections.singletonList("*"));
+                corsConfiguration.setExposedHeaders(Arrays.asList("Authorization"));
+                corsConfiguration.setMaxAge(3600L);
+                return corsConfiguration;
+            }
+        };
+    }
+
+    //    @Bean
+//    public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
+//        UserDetails user = User.builder()
+//                .username("user")
+//                .password(passwordEncoder.encode("user"))
+//                .roles("USER")
+//                .build();
+//        return new InMemoryUserDetailsManager(user);
+//    }
+//
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+}
