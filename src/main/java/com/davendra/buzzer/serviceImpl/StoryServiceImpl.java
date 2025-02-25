@@ -49,16 +49,6 @@ public class StoryServiceImpl implements StoryService {
 
     @Override
     public GlobalApiResponse<?> getAllStoryForUser(Long userId, int page, int size) {
-//        UserModel userModel = userService.findUserById(userId);
-//        List<Long> usersToSearchStoriesFor = userModel.getFollowings();
-//        usersToSearchStoriesFor.add(userModel.getId());
-//        List<StoryModel> storyModelList = storyRepo.findActiveByUserIdIn(usersToSearchStoriesFor);
-//        List<StoryResponse> storyResponseList = new ArrayList<>();
-//        storyModelList.forEach(story -> {
-//            storyResponseList.add(modelMapper.map(story, StoryResponse.class));
-//        });
-//        return storyResponseList;
-
 
         UserModel userModel = userService.findUserById(userId);
         List<Long> usersToSearchStoriesFor = new ArrayList<>(userModel.getFollowings());
