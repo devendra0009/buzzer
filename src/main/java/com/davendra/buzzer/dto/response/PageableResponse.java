@@ -1,5 +1,6 @@
 package com.davendra.buzzer.dto.response;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,8 +8,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class GlobalApiResponse<T> {
+public class PageableResponse<T> {
     private T data;
-    private String message;
-    private boolean status;
+    private int totalPages;
+    private int pageNumber;
+    private int pageSize;
+    private long totalElements;
+    private boolean isLastPage;
 }

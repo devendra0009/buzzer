@@ -1,10 +1,11 @@
 package com.davendra.buzzer.serviceImpl;
 
 import com.davendra.buzzer.dto.request.PostRequest;
-import com.davendra.buzzer.dto.response.AuthResponse;
+import com.davendra.buzzer.dto.response.GlobalApiResponse;
+import com.davendra.buzzer.dto.response.PageableResponse;
 import com.davendra.buzzer.dto.response.PostResponse;
-import com.davendra.buzzer.models.PostModel;
-import com.davendra.buzzer.models.UserModel;
+import com.davendra.buzzer.entity.PostModel;
+import com.davendra.buzzer.entity.UserModel;
 import com.davendra.buzzer.repositories.PostRepo;
 import com.davendra.buzzer.repositories.UserRepo;
 import com.davendra.buzzer.services.CloudinaryUploadService;
@@ -12,11 +13,11 @@ import com.davendra.buzzer.services.PostService;
 import com.davendra.buzzer.services.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -78,8 +79,30 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostModel> findPostsByUserId(Long userId) {
-        return postRepository.findByUserId(userId);
+    public GlobalApiResponse<?> findPostsByUserId(Long userId, int page, int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<PostModel> postModelPage = postRepository.findByUserId(userId, pageable);
+
+        // Convert List<PostModel> to List<PostResponse>
+        List<PostResponse> postResponses = postModelPage.getContent()
+                .stream()
+                .map(post -> modelMapper.map(post, PostResponse.class))
+                .toList();
+        // Create PageableResponse
+        PageableResponse<List<PostResponse>> pageableResponse = new PageableResponse<>(
+                postResponses,
+                postModelPage.getTotalPages(),
+                postModelPage.getNumber(),
+                postModelPage.getSize(),
+                postModelPage.getTotalElements(),
+                postModelPage.isLast()
+        );
+        return new GlobalApiResponse<>(
+                pageableResponse,
+                "Posts for user retrieved successfully",
+                true
+        );
     }
 
     @Override
@@ -89,8 +112,29 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostModel> findAllPost() {
-        return postRepository.findAll();
+    public GlobalApiResponse<?> findAllPost(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<PostModel> postModelPage = postRepository.findAll(pageable);
+
+        // Convert List<PostModel> to List<PostResponse>
+        List<PostResponse> postResponses = postModelPage.getContent()
+                .stream()
+                .map(post -> modelMapper.map(post, PostResponse.class))
+                .toList();
+        // Create PageableResponse
+        PageableResponse<List<PostResponse>> pageableResponse = new PageableResponse<>(
+                postResponses,
+                postModelPage.getTotalPages(),
+                postModelPage.getNumber(),
+                postModelPage.getSize(),
+                postModelPage.getTotalElements(),
+                postModelPage.isLast()
+        );
+        return new GlobalApiResponse<>(
+                pageableResponse,
+                "Posts retrieved successfully",
+                true
+        );
     }
 
     @Override
@@ -128,12 +172,31 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostResponse> getAllSavedPostByUserId(Long userId) {
-        List<PostModel> post = postRepository.findBySavedBy(userId);
-        List<PostResponse> postResponses = new ArrayList<>();
-        post.forEach(p -> {
-            postResponses.add(modelMapper.map(p, PostResponse.class));
-        });
-        return postResponses;
+    public GlobalApiResponse<?> getAllSavedPostByUserId(Long userId, int page, int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<PostModel> postModelPage = postRepository.findBySavedBy(userId, pageable);
+
+        // Convert List<PostModel> to List<PostResponse>
+        List<PostResponse> postResponses = postModelPage.getContent()
+                .stream()
+                .map(p -> modelMapper.map(p, PostResponse.class))
+                .toList();
+
+        PageableResponse<List<PostResponse>> pageableResponse = new PageableResponse<>(
+                postResponses,
+                postModelPage.getTotalPages(),
+                postModelPage.getNumber(),
+                postModelPage.getSize(),
+                postModelPage.getTotalElements(),
+                postModelPage.isLast()
+        );
+
+        return new GlobalApiResponse<>(
+                pageableResponse,
+                "Saved Posts retrieved successfully",
+                true
+        );
+
     }
 }

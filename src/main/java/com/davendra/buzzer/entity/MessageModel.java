@@ -1,6 +1,5 @@
-package com.davendra.buzzer.models;
+package com.davendra.buzzer.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

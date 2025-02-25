@@ -3,18 +3,16 @@ package com.davendra.buzzer.serviceImpl;
 import com.davendra.buzzer.config.JwtProvider;
 import com.davendra.buzzer.dto.request.LoginRequest;
 import com.davendra.buzzer.dto.request.RegisterRequest;
-import com.davendra.buzzer.dto.response.AuthResponse;
-import com.davendra.buzzer.models.UserModel;
+import com.davendra.buzzer.dto.response.*;
+import com.davendra.buzzer.entity.UserModel;
 import com.davendra.buzzer.repositories.UserRepo;
 import com.davendra.buzzer.services.CloudinaryUploadService;
 import com.davendra.buzzer.services.UserService;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -90,18 +88,46 @@ public class UserServiceImpl implements UserService {
         return AuthResponse.builder().token(token).message("Registered successfully").build();
     }
 
-    public List<UserModel> searchUser(String query, int page, int size) {
+    public GlobalApiResponse<?> searchUser(String query, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<UserModel> userPage = userRepository.searchByKeyword(query, pageable);
-        return userPage.getContent(); // Convert the Page to List
+        List<UserResponse> userResponseList = userPage.getContent()
+                .stream()
+                .map(usr -> modelMapper.map(usr, UserResponse.class))
+                .toList();
+
+        PageableResponse<List<UserResponse>> pageableResponse = new PageableResponse<>(
+                userResponseList,
+                userPage.getTotalPages(),
+                userPage.getNumber(),
+                userPage.getSize(),
+                userPage.getTotalElements(),
+                userPage.isLast()
+        );
+
+        return new GlobalApiResponse<>(pageableResponse, "Searched User's retrieved successfully", true);
     }
 
 
     @Override
-    public List<UserModel> getAllUsers(String sortBy, int page, int size) {
+    public GlobalApiResponse<?> getAllUsers(String sortBy, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<UserModel> userPage = userRepository.findUsersSorted(sortBy, pageable);
-        return userPage.getContent();
+        List<UserResponse> userResponseList = userPage.getContent()
+                .stream()
+                .map(usr -> modelMapper.map(usr, UserResponse.class))
+                .toList();
+
+        PageableResponse<List<UserResponse>> pageableResponse = new PageableResponse<>(
+                userResponseList,
+                userPage.getTotalPages(),
+                userPage.getNumber(),
+                userPage.getSize(),
+                userPage.getTotalElements(),
+                userPage.isLast()
+        );
+
+        return new GlobalApiResponse<>(pageableResponse, "All User's retrieved successfully", true);
     }
 
     @Override

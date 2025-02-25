@@ -1,7 +1,5 @@
 package com.davendra.buzzer.dto.request;
 
-import com.davendra.buzzer.models.UserModel;
-import jakarta.persistence.ManyToOne;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;

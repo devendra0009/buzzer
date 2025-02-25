@@ -1,15 +1,20 @@
 package com.davendra.buzzer.serviceImpl;
 
 import com.davendra.buzzer.dto.request.StoryRequest;
+import com.davendra.buzzer.dto.response.GlobalApiResponse;
+import com.davendra.buzzer.dto.response.PageableResponse;
 import com.davendra.buzzer.dto.response.StoryResponse;
-import com.davendra.buzzer.models.StoryModel;
-import com.davendra.buzzer.models.UserModel;
+import com.davendra.buzzer.entity.StoryModel;
+import com.davendra.buzzer.entity.UserModel;
 import com.davendra.buzzer.repositories.StoryRepo;
 import com.davendra.buzzer.repositories.UserRepo;
 import com.davendra.buzzer.services.StoryService;
 import com.davendra.buzzer.services.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -43,25 +48,62 @@ public class StoryServiceImpl implements StoryService {
     }
 
     @Override
-    public List<StoryResponse> getAllStoryForUser(Long userId) {
+    public GlobalApiResponse<?> getAllStoryForUser(Long userId, int page, int size) {
+//        UserModel userModel = userService.findUserById(userId);
+//        List<Long> usersToSearchStoriesFor = userModel.getFollowings();
+//        usersToSearchStoriesFor.add(userModel.getId());
+//        List<StoryModel> storyModelList = storyRepo.findActiveByUserIdIn(usersToSearchStoriesFor);
+//        List<StoryResponse> storyResponseList = new ArrayList<>();
+//        storyModelList.forEach(story -> {
+//            storyResponseList.add(modelMapper.map(story, StoryResponse.class));
+//        });
+//        return storyResponseList;
+
+
         UserModel userModel = userService.findUserById(userId);
-        List<Long> usersToSearchStoriesFor = userModel.getFollowings();
+        List<Long> usersToSearchStoriesFor = new ArrayList<>(userModel.getFollowings());
         usersToSearchStoriesFor.add(userModel.getId());
-        List<StoryModel> storyModelList = storyRepo.findActiveByUserIdIn(usersToSearchStoriesFor);
-        List<StoryResponse> storyResponseList = new ArrayList<>();
-        storyModelList.forEach(story -> {
-            storyResponseList.add(modelMapper.map(story, StoryResponse.class));
-        });
-        return storyResponseList;
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<StoryModel> storyModelPage = storyRepo.findActiveByUserIdIn(usersToSearchStoriesFor, pageable);
+
+        List<StoryResponse> storyResponseList = storyModelPage.getContent()
+                .stream()
+                .map(story -> modelMapper.map(story, StoryResponse.class))
+                .toList();
+
+        PageableResponse<List<StoryResponse>> pageableResponse = new PageableResponse<>(
+                storyResponseList,
+                storyModelPage.getTotalPages(),
+                storyModelPage.getNumber(),
+                storyModelPage.getSize(),
+                storyModelPage.getTotalElements(),
+                storyModelPage.isLast()
+        );
+
+        return new GlobalApiResponse<>(pageableResponse, "User stories retrieved successfully", true);
     }
 
     @Override
-    public List<StoryResponse> getAllStoryOfUser(Long userId) {
-        List<StoryResponse> storyResponseList = new ArrayList<>();
-        storyRepo.findActiveByUserId(userId).forEach(story -> {
-            storyResponseList.add(modelMapper.map(story, StoryResponse.class));
-        });
-        return storyResponseList;
+    public GlobalApiResponse<?> getAllStoryOfUser(Long userId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<StoryModel> storyModelPage = storyRepo.findActiveByUserId(userId, pageable);
+
+        List<StoryResponse> storyResponseList = storyModelPage.getContent()
+                .stream()
+                .map(story -> modelMapper.map(story, StoryResponse.class))
+                .toList();
+
+        PageableResponse<List<StoryResponse>> pageableResponse = new PageableResponse<>(
+                storyResponseList,
+                storyModelPage.getTotalPages(),
+                storyModelPage.getNumber(),
+                storyModelPage.getSize(),
+                storyModelPage.getTotalElements(),
+                storyModelPage.isLast()
+        );
+
+        return new GlobalApiResponse<>(pageableResponse, "User's stories retrieved successfully", true);
     }
 
     @Override

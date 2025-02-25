@@ -2,9 +2,12 @@ package com.davendra.buzzer.serviceImpl;
 
 import com.davendra.buzzer.dto.request.CommentRequest;
 import com.davendra.buzzer.dto.response.CommentResponse;
-import com.davendra.buzzer.models.CommentModel;
-import com.davendra.buzzer.models.PostModel;
-import com.davendra.buzzer.models.UserModel;
+import com.davendra.buzzer.dto.response.GlobalApiResponse;
+import com.davendra.buzzer.dto.response.PageableResponse;
+import com.davendra.buzzer.dto.response.StoryResponse;
+import com.davendra.buzzer.entity.CommentModel;
+import com.davendra.buzzer.entity.PostModel;
+import com.davendra.buzzer.entity.UserModel;
 import com.davendra.buzzer.repositories.CommentRepo;
 import com.davendra.buzzer.repositories.PostRepo;
 import com.davendra.buzzer.services.CommentService;
@@ -12,6 +15,9 @@ import com.davendra.buzzer.services.PostService;
 import com.davendra.buzzer.services.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -32,20 +38,45 @@ public class CommentServiceImpl implements CommentService {
     ModelMapper modelMapper;
 
     @Override
-    public List<CommentModel> getCommentsByUserId(Long userId) {
-        return commentRepo.findByCommentedById(userId);
+    public GlobalApiResponse<?> getCommentsByUserId(Long userId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<CommentModel> commentModelPage = commentRepo.findByCommentedById(userId, pageable);
+        List<CommentResponse> commentResponseList = commentModelPage.getContent()
+                .stream()
+                .map(story -> modelMapper.map(story, CommentResponse.class))
+                .toList();
+
+        PageableResponse<List<CommentResponse>> pageableResponse = new PageableResponse<>(
+                commentResponseList,
+                commentModelPage.getTotalPages(),
+                commentModelPage.getNumber(),
+                commentModelPage.getSize(),
+                commentModelPage.getTotalElements(),
+                commentModelPage.isLast()
+        );
+
+        return new GlobalApiResponse<>(pageableResponse, "User's comments retrieved successfully", true);
     }
 
     @Override
-    public List<CommentResponse> getCommentsByPostId(Long postId) {
-        List<CommentModel> commentModel = commentRepo.findByPostId(postId);
-        List<CommentResponse> commentResponseList = new ArrayList<>();
-        commentModel.forEach((comment) -> {
-            CommentResponse commentResponse = new CommentResponse();
-            modelMapper.map(comment, commentResponse);
-            commentResponseList.add(commentResponse);
-        });
-        return commentResponseList;
+    public GlobalApiResponse<?> getCommentsByPostId(Long postId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<CommentModel> commentModelPage = commentRepo.findByPostId(postId, pageable);
+        List<CommentResponse> commentResponseList = commentModelPage.getContent()
+                .stream()
+                .map(story -> modelMapper.map(story, CommentResponse.class))
+                .toList();
+
+        PageableResponse<List<CommentResponse>> pageableResponse = new PageableResponse<>(
+                commentResponseList,
+                commentModelPage.getTotalPages(),
+                commentModelPage.getNumber(),
+                commentModelPage.getSize(),
+                commentModelPage.getTotalElements(),
+                commentModelPage.isLast()
+        );
+
+        return new GlobalApiResponse<>(pageableResponse, "Post's comments retrieved successfully", true);
     }
 
     @Override

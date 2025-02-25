@@ -2,8 +2,8 @@ package com.davendra.buzzer.controller;
 
 
 import com.davendra.buzzer.dto.request.StoryRequest;
+import com.davendra.buzzer.dto.response.GlobalApiResponse;
 import com.davendra.buzzer.dto.response.StoryResponse;
-import com.davendra.buzzer.models.StoryModel;
 import com.davendra.buzzer.services.StoryService;
 import com.davendra.buzzer.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,13 +30,16 @@ public class StoryController {
 
 
     @GetMapping("/for/user")
-    public ResponseEntity<List<StoryResponse>> getAllStoryForUser(@RequestHeader("Authorization") String token) {
-        return ResponseEntity.of(Optional.ofNullable(storyService.getAllStoryForUser(userService.getUserFromToken(token).getId())));
+    public ResponseEntity<GlobalApiResponse<?>> getAllStoryForUser(@RequestHeader("Authorization") String token, @RequestParam(defaultValue = "0") int page,
+                                                                   @RequestParam(defaultValue = "10") int size) {
+        Long userId = userService.getUserFromToken(token).getId();
+        return ResponseEntity.ok(storyService.getAllStoryForUser(userId, page, size));
     }
 
     @GetMapping("/of/user/{userId}")
-    public ResponseEntity<List<StoryResponse>> getAllStoryOfUser(@PathVariable Long userId) {
-        return ResponseEntity.of(Optional.ofNullable(storyService.getAllStoryOfUser(userId)));
+    public ResponseEntity<GlobalApiResponse<?>> getAllStoryOfUser(@PathVariable Long userId, @RequestParam(defaultValue = "0") int page,
+                                                                  @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(storyService.getAllStoryOfUser(userId, page, size))
     }
 
     // will optimize it -> seen by story srchitecture

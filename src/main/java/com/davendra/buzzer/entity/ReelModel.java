@@ -1,8 +1,6 @@
-package com.davendra.buzzer.models;
+package com.davendra.buzzer.entity;
 
-import com.davendra.buzzer.dto.response.UploadedFileResponse;
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;

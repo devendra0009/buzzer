@@ -1,9 +1,5 @@
-package com.davendra.buzzer.models;
+package com.davendra.buzzer.entity;
 
-import com.davendra.buzzer.dto.response.UploadedFileResponse;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

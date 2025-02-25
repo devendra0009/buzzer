@@ -1,6 +1,7 @@
 package com.davendra.buzzer.services;
 
-import com.davendra.buzzer.models.ChatModel;
+import com.davendra.buzzer.dto.response.GlobalApiResponse;
+import com.davendra.buzzer.entity.ChatModel;
 
 import java.util.List;
 
@@ -9,5 +10,5 @@ public interface ChatService {
 
     public ChatModel findChatById(Long chatId);
 
-    public List<ChatModel> findChatsByUserId(Long userId);
+    public GlobalApiResponse<?> findChatsByUserId(Long userId, int page, int size);
 }

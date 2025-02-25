@@ -1,11 +1,8 @@
 package com.davendra.buzzer.dto.response;
 
-import com.davendra.buzzer.models.PostModel;
-import com.davendra.buzzer.models.UserModel;
-import jakarta.persistence.ManyToOne;
+import com.davendra.buzzer.entity.PostModel;
+import com.davendra.buzzer.entity.UserModel;
 import lombok.Data;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;

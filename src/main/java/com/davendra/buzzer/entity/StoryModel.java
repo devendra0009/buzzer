@@ -1,4 +1,4 @@
-package com.davendra.buzzer.models;
+package com.davendra.buzzer.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;

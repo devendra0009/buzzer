@@ -1,6 +1,8 @@
 package com.davendra.buzzer.repositories;
 
-import com.davendra.buzzer.models.StoryModel;
+import com.davendra.buzzer.entity.StoryModel;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,10 +15,11 @@ import java.util.List;
 public interface StoryRepo extends JpaRepository<StoryModel, Long> {
 
     @Query("select s from StoryModel s where s.user.id in :userId and s.isActive = true ")
-    public List<StoryModel> findActiveByUserId(Long userId);
+    Page<StoryModel> findActiveByUserId(Long userId, Pageable pageable);
 
-    @Query("select s from StoryModel s where s.user.id in :userIds and s.isActive = true ")
-    public List<StoryModel> findActiveByUserIdIn(List<Long> userIds);
+    @Query("SELECT s FROM StoryModel s WHERE s.user.id IN :userIds AND s.isActive = true")
+    Page<StoryModel> findActiveByUserIdIn(@Param("userIds") List<Long> userIds, Pageable pageable);
+
 
     @Query("SELECT s FROM StoryModel s WHERE s.isActive = true AND s.deactivatedAt <= :currentTime")
     List<StoryModel> findByIsActiveTrueAndDeactivateAtBefore(@Param("currentTime") LocalDateTime currentTime);

@@ -1,9 +1,6 @@
 package com.davendra.buzzer.dto.request;
 
-import com.davendra.buzzer.models.UserModel;
 import lombok.Data;
-
-import java.time.LocalDateTime;
 
 @Data
 public class StoryRequest {

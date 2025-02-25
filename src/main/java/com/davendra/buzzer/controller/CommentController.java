@@ -3,7 +3,8 @@ package com.davendra.buzzer.controller;
 
 import com.davendra.buzzer.dto.request.CommentRequest;
 import com.davendra.buzzer.dto.response.CommentResponse;
-import com.davendra.buzzer.models.CommentModel;
+import com.davendra.buzzer.dto.response.GlobalApiResponse;
+import com.davendra.buzzer.entity.CommentModel;
 import com.davendra.buzzer.services.CommentService;
 import com.davendra.buzzer.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,18 +27,15 @@ public class CommentController {
 
     // Get all comments by User ID
     @GetMapping("/user")
-    public ResponseEntity<List<CommentModel>> getCommentsByUserId(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<GlobalApiResponse<?>> getCommentsByUserId(@RequestHeader("Authorization") String token, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
         Long userId = userService.getUserFromToken(token).getId();
-        List<CommentModel> comments = commentService.getCommentsByUserId(userId);
-        return ResponseEntity.ok(comments);
+        return ResponseEntity.ok(commentService.getCommentsByUserId(userId));
     }
 
     // Get all comments by post ID
     @GetMapping("/post/{postId}")
-    public ResponseEntity<List<CommentResponse>> getCommentsByPostId( @PathVariable("postId") Long postId) {
-//        Long userId = userService.getUserFromToken(token).getId();
-        List<CommentResponse> comments = commentService.getCommentsByPostId(postId);
-        return ResponseEntity.ok(comments);
+    public ResponseEntity<GlobalApiResponse<?>> getCommentsByPostId(@PathVariable("postId") Long postId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(commentService.getCommentsByPostId(postId));
     }
 
     // Get comment by Comment ID

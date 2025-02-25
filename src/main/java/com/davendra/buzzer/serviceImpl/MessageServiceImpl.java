@@ -1,14 +1,23 @@
 package com.davendra.buzzer.serviceImpl;
 
 import com.davendra.buzzer.dto.request.MessageRequest;
-import com.davendra.buzzer.models.ChatModel;
-import com.davendra.buzzer.models.MessageModel;
-import com.davendra.buzzer.models.UserModel;
+import com.davendra.buzzer.dto.response.GlobalApiResponse;
+import com.davendra.buzzer.dto.response.MessageResponse;
+import com.davendra.buzzer.dto.response.PageableResponse;
+import com.davendra.buzzer.dto.response.StoryResponse;
+import com.davendra.buzzer.entity.ChatModel;
+import com.davendra.buzzer.entity.MessageModel;
+import com.davendra.buzzer.entity.StoryModel;
+import com.davendra.buzzer.entity.UserModel;
 import com.davendra.buzzer.repositories.ChatRepo;
 import com.davendra.buzzer.repositories.MessageRepo;
 import com.davendra.buzzer.services.ChatService;
 import com.davendra.buzzer.services.MessageService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,23 +33,44 @@ public class MessageServiceImpl implements MessageService {
     @Autowired
     private ChatRepo chatRepo;
 
+    @Autowired
+    ModelMapper modelMapper;
+
 
     @Override
     public MessageModel createMessage(UserModel user, Long chatId, MessageRequest messageRequest) {
-        ChatModel chat=chatService.findChatById(chatId);
-        MessageModel newMessage=new MessageModel();
+        ChatModel chat = chatService.findChatById(chatId);
+        MessageModel newMessage = new MessageModel();
         newMessage.setChat(chat);
         newMessage.setContent(messageRequest.getContent());
         newMessage.setImage(messageRequest.getImage());
         newMessage.setUser(user);
-        MessageModel savedMsg=messageRepo.save(newMessage);
+        MessageModel savedMsg = messageRepo.save(newMessage);
         chat.getMessages().add(savedMsg);
         chatRepo.save(chat);
         return savedMsg;
     }
 
     @Override
-    public List<MessageModel> findMessagesByChatId(Long chatId) {
-        return messageRepo.findByChatId(chatId);
+    public GlobalApiResponse<?> findMessagesByChatId(Long chatId, int page, int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<MessageModel> messageModelPage = messageRepo.findByChatId(chatId, pageable);
+
+        List<MessageResponse> messageResponseList = messageModelPage.getContent()
+                .stream()
+                .map(msg -> modelMapper.map(msg, MessageResponse.class))
+                .toList();
+
+        PageableResponse<List<MessageResponse>> pageableResponse = new PageableResponse<>(
+                messageResponseList,
+                messageModelPage.getTotalPages(),
+                messageModelPage.getNumber(),
+                messageModelPage.getSize(),
+                messageModelPage.getTotalElements(),
+                messageModelPage.isLast()
+        );
+
+        return new GlobalApiResponse<>(pageableResponse, "All message of this chat retrieved successfully", true);
     }
 }

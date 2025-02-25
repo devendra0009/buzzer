@@ -2,7 +2,8 @@ package com.davendra.buzzer.controller;
 
 
 import com.davendra.buzzer.dto.request.ReelRequest;
-import com.davendra.buzzer.models.ReelModel;
+import com.davendra.buzzer.dto.response.GlobalApiResponse;
+import com.davendra.buzzer.entity.ReelModel;
 import com.davendra.buzzer.services.ReelsService;
 import com.davendra.buzzer.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +33,9 @@ public class ReelsController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<ReelModel>> getAllReels() {
-        return ResponseEntity.ok(reelsService.getAllReels());
+    public ResponseEntity<GlobalApiResponse<?>> getAllReels(@RequestParam(defaultValue = "0") int page,
+                                                            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(reelsService.getAllReels(page, size));
     }
 
     @GetMapping("/user/{userId}")

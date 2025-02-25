@@ -4,7 +4,6 @@ import com.davendra.buzzer.dto.request.LoginRequest;
 import com.davendra.buzzer.dto.request.RegisterRequest;
 import com.davendra.buzzer.dto.response.AuthResponse;
 import com.davendra.buzzer.enums.GenderEnum;
-import com.davendra.buzzer.models.UserModel;
 import com.davendra.buzzer.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/auth")

@@ -1,12 +1,14 @@
 package com.davendra.buzzer.controller;
 
 import com.davendra.buzzer.dto.request.PostRequest;
+import com.davendra.buzzer.dto.response.GlobalApiResponse;
 import com.davendra.buzzer.dto.response.PostResponse;
-import com.davendra.buzzer.models.PostModel;
+import com.davendra.buzzer.entity.PostModel;
 import com.davendra.buzzer.services.PostService;
 import com.davendra.buzzer.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -45,9 +47,8 @@ public class PostController {
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<PostModel>> findPostsByUserId(@PathVariable Long userId) {
-        List<PostModel> userPosts = postService.findPostsByUserId(userId);
-        return ResponseEntity.ok(userPosts);
+    public ResponseEntity<GlobalApiResponse<?>> findPostsByUserId(@PathVariable Long userId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(postService.findPostsByUserId(userId, page, size));
     }
 
     @GetMapping("/{postId}")
@@ -57,9 +58,10 @@ public class PostController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<PostModel>> findAllPosts() {
-        List<PostModel> allPosts = postService.findAllPost();
-        return ResponseEntity.ok(allPosts);
+    public ResponseEntity<GlobalApiResponse<?>> findAllPosts(@RequestParam(defaultValue = "0") int page,
+                                                             @RequestParam(defaultValue = "10") int size) {
+        GlobalApiResponse<?> response = postService.findAllPost(page, size);
+        return ResponseEntity.ok(response); // Returns HTTP 200
     }
 
     @PostMapping("/like/{postId}")
@@ -74,8 +76,8 @@ public class PostController {
     }
 
     @GetMapping("/saved/get/{userId}")
-    public ResponseEntity<List<PostResponse>> getAllSavedPostByUserId(@PathVariable Long userId) {
-        List<PostResponse> response = postService.getAllSavedPostByUserId(userId);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<GlobalApiResponse<?>> getAllSavedPostByUserId(@PathVariable Long userId, @RequestParam(defaultValue = "0") int page,
+                                                                        @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(postService.getAllSavedPostByUserId(userId, page, size));
     }
 }

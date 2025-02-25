@@ -1,10 +1,12 @@
 package com.davendra.buzzer.controller;
 
 import com.davendra.buzzer.dto.request.ChatRequest;
-import com.davendra.buzzer.models.ChatModel;
+import com.davendra.buzzer.dto.response.GlobalApiResponse;
+import com.davendra.buzzer.entity.ChatModel;
 import com.davendra.buzzer.services.ChatService;
 import com.davendra.buzzer.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,8 +30,8 @@ public class ChatController {
     }
 
     @GetMapping("/user/get")
-    public List<ChatModel> findChatsByUserId(@RequestHeader("Authorization") String token) {
-        return chatService.findChatsByUserId(userService.getUserFromToken(token).getId());
+    public ResponseEntity<GlobalApiResponse<?>> findChatsByUserId(@RequestHeader("Authorization") String token, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(chatService.findChatsByUserId(userService.getUserFromToken(token).getId(), page, size));
     }
 
 }

@@ -1,9 +1,9 @@
 package com.davendra.buzzer.services;
 
 import com.davendra.buzzer.dto.request.PostRequest;
+import com.davendra.buzzer.dto.response.GlobalApiResponse;
 import com.davendra.buzzer.dto.response.PostResponse;
-import com.davendra.buzzer.models.PostModel;
-import org.springframework.web.multipart.MultipartFile;
+import com.davendra.buzzer.entity.PostModel;
 
 import java.io.IOException;
 import java.util.List;
@@ -13,16 +13,17 @@ public interface PostService {
 
     public String deletePost(Long postId, Long userId) throws Exception;
 
-    public List<PostModel> findPostsByUserId(Long userId);
+    public GlobalApiResponse<?> findPostsByUserId(Long userId, int page, int size);
 
     public PostModel findPostsById(Long postId);
 
-    public List<PostModel> findAllPost();
+    public GlobalApiResponse<?> findAllPost(int page, int size);
 
     public PostResponse likePost(Long userId, Long postId);
 
     public PostResponse savePost(Long userId, Long postId);
-    public List<PostResponse> getAllSavedPostByUserId(Long userId);
+
+    public GlobalApiResponse<?> getAllSavedPostByUserId(Long userId, int page, int size);
 
 //    public PostModel updatePost(PostModel post, Long postId);
 }

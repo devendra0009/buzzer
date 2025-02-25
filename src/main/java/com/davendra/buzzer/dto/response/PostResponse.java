@@ -1,7 +1,7 @@
 package com.davendra.buzzer.dto.response;
 
-import com.davendra.buzzer.models.CommentModel;
-import com.davendra.buzzer.models.UserModel;
+import com.davendra.buzzer.entity.CommentModel;
+import com.davendra.buzzer.entity.UserModel;
 import lombok.Data;
 
 import java.time.LocalDateTime;

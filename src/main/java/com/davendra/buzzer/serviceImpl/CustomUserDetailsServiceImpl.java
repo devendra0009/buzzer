@@ -1,6 +1,6 @@
 package com.davendra.buzzer.serviceImpl;
 
-import com.davendra.buzzer.models.UserModel;
+import com.davendra.buzzer.entity.UserModel;
 import com.davendra.buzzer.repositories.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;

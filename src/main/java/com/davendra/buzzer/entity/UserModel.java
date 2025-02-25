@@ -1,14 +1,11 @@
-package com.davendra.buzzer.models;
+package com.davendra.buzzer.entity;
 
 
 //@Entity(name="something") -> so the name given in this is used to write queries in our java app
 // @Table(name="some2") -> this name is used to make a table in db, if not specified (it'll take it from @Entity
 
 import com.davendra.buzzer.enums.GenderEnum;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
