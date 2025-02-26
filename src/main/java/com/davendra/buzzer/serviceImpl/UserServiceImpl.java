@@ -66,14 +66,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public AuthResponse registerUser(RegisterRequest registerRequest) throws IOException {
-        if (userRepository.findByEmail(registerRequest.getEmail()).isPresent()) {
-            throw new IllegalArgumentException("Email is already registered.");
+        if (registerRequest.getEmail() != null && !registerRequest.getEmail().isEmpty()) {
+            if (userRepository.findByEmail(registerRequest.getEmail()).isPresent()) {
+                throw new IllegalArgumentException("Email is already registered.");
+            }
         }
+        if (registerRequest.getPhone() != null && !registerRequest.getPhone().isEmpty()) {
+            if (userRepository.findByPhone(registerRequest.getPhone()).isPresent()) {
+                throw new IllegalArgumentException("Phone is already registered.");
+            }
+        }
+
 
         registerRequest.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
 
-        UserModel userModel = new UserModel();
-        modelMapper.map(registerRequest, userModel);
+        UserModel userModel = modelMapper.map(registerRequest, UserModel.class);
 
         // here error may occur
 
