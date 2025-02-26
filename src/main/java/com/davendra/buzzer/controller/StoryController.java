@@ -39,7 +39,7 @@ public class StoryController {
     @GetMapping("/of/user/{userId}")
     public ResponseEntity<GlobalApiResponse<?>> getAllStoryOfUser(@PathVariable Long userId, @RequestParam(defaultValue = "0") int page,
                                                                   @RequestParam(defaultValue = "10") int size) {
-        return ResponseEntity.ok(storyService.getAllStoryOfUser(userId, page, size))
+        return ResponseEntity.ok(storyService.getAllStoryOfUser(userId, page, size));
     }
 
     // will optimize it -> seen by story srchitecture

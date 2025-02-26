@@ -29,13 +29,13 @@ public class CommentController {
     @GetMapping("/user")
     public ResponseEntity<GlobalApiResponse<?>> getCommentsByUserId(@RequestHeader("Authorization") String token, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
         Long userId = userService.getUserFromToken(token).getId();
-        return ResponseEntity.ok(commentService.getCommentsByUserId(userId));
+        return ResponseEntity.ok(commentService.getCommentsByUserId(userId, page, size));
     }
 
     // Get all comments by post ID
     @GetMapping("/post/{postId}")
     public ResponseEntity<GlobalApiResponse<?>> getCommentsByPostId(@PathVariable("postId") Long postId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
-        return ResponseEntity.ok(commentService.getCommentsByPostId(postId));
+        return ResponseEntity.ok(commentService.getCommentsByPostId(postId, page, size));
     }
 
     // Get comment by Comment ID

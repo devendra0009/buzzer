@@ -13,6 +13,7 @@ import java.util.Optional;
 @Repository
 public interface UserRepo extends JpaRepository<UserModel, Long> {
     Optional<UserModel> findByEmail(String email);
+    Optional<UserModel> findByPhone(String phone);
 
     @Query("SELECT u FROM UserModel u WHERE u.firstName LIKE %:query% OR u.email LIKE %:query% or u.lastName LIKE %:query%")
     Page<UserModel> searchByKeyword(String query, Pageable pageable);

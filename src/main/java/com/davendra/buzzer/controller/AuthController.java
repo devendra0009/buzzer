@@ -21,15 +21,16 @@ public class AuthController {
     private UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> registerUser(@RequestParam(name = "firstName", required = false) String firstName,
-                                                     @RequestParam(name = "lastName", required = false) String lastName,
-                                                     @RequestParam(name = "email", required = false) String email,
+    public ResponseEntity<AuthResponse> registerUser(@RequestParam(name = "firstName", required = true) String firstName,
+                                                     @RequestParam(name = "lastName", required = true) String lastName,
+                                                     @RequestParam(name = "userName", required = true) String userName,
+                                                     @RequestParam(name = "email", required = true) String email,
                                                      @RequestParam(name = "phone", required = false) String phone,
-                                                     @RequestParam(name = "password", required = false) String password,
-                                                     @RequestParam(name = "gender", required = false) GenderEnum gender,
-                                                     @RequestPart("profileImg") MultipartFile profileImg) throws IOException {
+                                                     @RequestParam(name = "password", required = true) String password,
+                                                     @RequestParam(name = "gender", required = true) GenderEnum gender,
+                                                     @RequestPart(value = "profileImg", required = false) MultipartFile profileImg) throws IOException {
 
-        RegisterRequest registerRequest = RegisterRequest.builder().firstName(firstName).lastName(lastName).email(email).phone(phone).password(password).gender(gender).profileImg(profileImg).build();
+        RegisterRequest registerRequest = RegisterRequest.builder().firstName(firstName).lastName(lastName).userName(userName).email(email).phone(phone).password(password).gender(gender).profileImg(profileImg).build();
         AuthResponse registeredUser = userService.registerUser(registerRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(registeredUser);
     }
