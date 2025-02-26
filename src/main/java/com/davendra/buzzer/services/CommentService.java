@@ -8,7 +8,7 @@ import com.davendra.buzzer.entity.CommentModel;
 import java.util.List;
 
 public interface CommentService {
-    public GlobalApiResponse<?> getCommentsByUserId(Long userId);
+    public GlobalApiResponse<?> getCommentsByUserId(Long userId, int page, int size);
 
     public GlobalApiResponse<?> getCommentsByPostId(Long postId, int page, int size);
 
