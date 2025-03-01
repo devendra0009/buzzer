@@ -24,7 +24,7 @@ public class AuthController {
     public ResponseEntity<AuthResponse> registerUser(@RequestParam(name = "firstName", required = true) String firstName,
                                                      @RequestParam(name = "lastName", required = true) String lastName,
                                                      @RequestParam(name = "userName", required = true) String userName,
-                                                     @RequestParam(name = "email", required = true) String email,
+                                                     @RequestParam(name = "email", required = false) String email,
                                                      @RequestParam(name = "phone", required = false) String phone,
                                                      @RequestParam(name = "password", required = true) String password,
                                                      @RequestParam(name = "gender", required = true) GenderEnum gender,

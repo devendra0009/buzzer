@@ -21,6 +21,7 @@ public class ChatController {
 
     @PostMapping("/new")
     public ChatModel createChat(@RequestHeader("Authorization") String token, @RequestBody ChatRequest chatRequest) throws Exception {
+        System.out.println(token);
         return chatService.createChat(userService.getUserFromToken(token).getId(), chatRequest.getUsers2());
     }
 
