@@ -2,6 +2,7 @@ package com.davendra.buzzer.dto.response;
 
 import com.davendra.buzzer.entity.MessageModel;
 import com.davendra.buzzer.entity.UserModel;
+import com.davendra.buzzer.enums.ChatType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
@@ -20,6 +21,7 @@ public class ChatResponse {
     private Long id;
     private String chatName;
     private String image;
+    private ChatType chatType;
     private List<UserModel> users;
     private List<MessageModel> messages = new ArrayList<>();
     private LocalDateTime createdAt;

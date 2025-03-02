@@ -1,6 +1,7 @@
 package com.davendra.buzzer.config;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,6 +37,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // will not make any session in the server instead take token including username and password
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(Customizer.withDefaults())
+                .oauth2Login(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/auth/**")
                         .permitAll()
@@ -46,7 +48,16 @@ public class SecurityConfig {
                 )
                 .addFilterBefore(jwtValidator, BasicAuthenticationFilter.class)
                 .cors(cors -> cors.configurationSource(corsConfigSource()))
-        ;
+//                .logout(logout -> logout
+//                        .logoutUrl("/api/v1/auth/logout")  // Custom logout endpoint
+//                        .logoutSuccessHandler((request, response, authentication) -> {
+//                            response.setStatus(HttpServletResponse.SC_OK);
+//                            response.getWriter().write("Logout successful");
+//                        })
+//                        .invalidateHttpSession(true)
+//                        .clearAuthentication(true)
+//                        .deleteCookies("JSESSIONID"))
+                ;
         return httpSecurity.build();
     }
 
