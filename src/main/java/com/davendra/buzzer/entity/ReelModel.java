@@ -24,8 +24,10 @@ public class ReelModel {
     private UserModel user;
 
     @CreationTimestamp
+    @Column(columnDefinition = "datetime")
     private LocalDateTime createdAt;
     @UpdateTimestamp
+    @Column(columnDefinition = "datetime")
     private LocalDateTime updatedAt;
 
 }

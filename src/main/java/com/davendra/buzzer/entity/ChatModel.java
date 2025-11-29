@@ -39,7 +39,9 @@ public class ChatModel {
 
 
     @CreationTimestamp
+    @Column(columnDefinition = "datetime")
     private LocalDateTime createdAt;
     @UpdateTimestamp
+    @Column(columnDefinition = "datetime")
     private LocalDateTime updatedAt;
 }

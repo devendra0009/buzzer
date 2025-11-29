@@ -66,8 +66,10 @@ public class PostModel {
     private List<UserModel> savedBy;
 
     @CreationTimestamp
+    @Column(columnDefinition = "datetime")
     private LocalDateTime createdAt;
     @UpdateTimestamp
+    @Column(columnDefinition = "datetime")
     private LocalDateTime updatedAt;
 
 }
