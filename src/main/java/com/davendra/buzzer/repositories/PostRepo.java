@@ -1,6 +1,7 @@
 package com.davendra.buzzer.repositories;
 
 import com.davendra.buzzer.entity.PostModel;
+import com.davendra.buzzer.entity.UserModel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,6 +14,6 @@ import java.util.List;
 public interface PostRepo extends JpaRepository<PostModel, Long> {
     Page<PostModel> findByUserId(Long userId, Pageable pageable);
 
-    Page<PostModel> findBySavedBy(Long userId, Pageable pageable);
+    Page<PostModel> findBySavedBy(UserModel userId, Pageable pageable);
 
 }

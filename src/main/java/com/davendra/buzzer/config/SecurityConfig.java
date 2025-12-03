@@ -57,7 +57,7 @@ public class SecurityConfig {
 //                        .invalidateHttpSession(true)
 //                        .clearAuthentication(true)
 //                        .deleteCookies("JSESSIONID"))
-                ;
+        ;
         return httpSecurity.build();
     }
 
@@ -66,7 +66,8 @@ public class SecurityConfig {
             @Override
             public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                 CorsConfiguration corsConfiguration = new CorsConfiguration();
-                corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+                corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://192.168.0.103:3000","https://gm5z27z4-3000.inc1.devtunnels.ms"));
+//                corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
                 corsConfiguration.setAllowedMethods(Collections.singletonList("*"));
                 corsConfiguration.setAllowCredentials(true);
                 corsConfiguration.setAllowedHeaders(Collections.singletonList("*"));

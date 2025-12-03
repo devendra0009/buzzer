@@ -23,7 +23,7 @@ public interface PostService {
 
     public PostResponse savePost(Long userId, Long postId);
 
-    public GlobalApiResponse<?> getAllSavedPostByUserId(Long userId, int page, int size);
+    public GlobalApiResponse<?> getAllSavedPostByUserId(Long userId, int page, int size) throws NoSuchFieldException;
 
 //    public PostModel updatePost(PostModel post, Long postId);
 }

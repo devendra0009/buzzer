@@ -20,6 +20,7 @@ public class MessageModel {
 
     private String content;
     private String image;
+    private String audio;
 
     @ManyToOne
     private UserModel user; // user who created this message

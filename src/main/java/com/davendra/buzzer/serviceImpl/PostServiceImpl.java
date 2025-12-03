@@ -11,6 +11,7 @@ import com.davendra.buzzer.repositories.UserRepo;
 import com.davendra.buzzer.services.CloudinaryUploadService;
 import com.davendra.buzzer.services.PostService;
 import com.davendra.buzzer.services.UserService;
+import org.apache.catalina.User;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,6 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -172,10 +174,13 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public GlobalApiResponse<?> getAllSavedPostByUserId(Long userId, int page, int size) {
+    public GlobalApiResponse<?> getAllSavedPostByUserId(Long userId, int page, int size) throws NoSuchFieldException {
 
         Pageable pageable = PageRequest.of(page, size);
-        Page<PostModel> postModelPage = postRepository.findBySavedBy(userId, pageable);
+
+        Optional<UserModel> userModelOptional= userRepo.findById(userId);
+        if(userModelOptional.isEmpty()) throw new NoSuchFieldException("User not present with this id: {}"+ userId);
+        Page<PostModel> postModelPage = postRepository.findBySavedBy(userModelOptional.get(), pageable);
 
         // Convert List<PostModel> to List<PostResponse>
         List<PostResponse> postResponses = postModelPage.getContent()

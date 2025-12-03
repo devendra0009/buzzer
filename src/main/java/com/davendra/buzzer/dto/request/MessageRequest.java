@@ -6,4 +6,5 @@ import lombok.Data;
 public class MessageRequest {
     private String content;
     private String image;
+    private String audio;
 }

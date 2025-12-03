@@ -11,13 +11,14 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws").setAllowedOriginPatterns("*","http://localhost:3000").withSockJS();
+//        registry.addEndpoint("/ws").setAllowedOriginPatterns("*", "http://localhost:3000").withSockJS();
+        registry.addEndpoint("/ws").setAllowedOriginPatterns("*").withSockJS();
     }
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         registry.setApplicationDestinationPrefixes("/app"); // user send the data from client side
-        registry.enableSimpleBroker("/group","/user","/chat");
-        registry.setUserDestinationPrefix("/user");
+        registry.enableSimpleBroker("/user", "/calling"); // don't use /calling only if using convertAndSendToUser as /user is special prefix that automatically routes msg based on user's session
+//        registry.setUserDestinationPrefix("/user");
     }
 }

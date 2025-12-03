@@ -77,7 +77,7 @@ public class PostController {
 
     @GetMapping("/saved/get/{userId}")
     public ResponseEntity<GlobalApiResponse<?>> getAllSavedPostByUserId(@PathVariable Long userId, @RequestParam(defaultValue = "0") int page,
-                                                                        @RequestParam(defaultValue = "10") int size) {
+                                                                        @RequestParam(defaultValue = "10") int size) throws NoSuchFieldException {
         return ResponseEntity.ok(postService.getAllSavedPostByUserId(userId, page, size));
     }
 }

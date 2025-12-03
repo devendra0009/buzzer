@@ -14,6 +14,7 @@ public class MessageResponse {
     private Long id;
     private String content;
     private String image;
+    private String audio;
     private UserModel user;
     private ChatModel chat;
     private LocalDateTime createdAt;

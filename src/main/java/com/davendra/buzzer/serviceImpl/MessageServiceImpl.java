@@ -14,10 +14,12 @@ import com.davendra.buzzer.repositories.MessageRepo;
 import com.davendra.buzzer.services.ChatService;
 import com.davendra.buzzer.services.MessageService;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,9 +43,8 @@ public class MessageServiceImpl implements MessageService {
     public MessageModel createMessage(UserModel user, Long chatId, MessageRequest messageRequest) {
         ChatModel chat = chatService.findChatById(chatId);
         MessageModel newMessage = new MessageModel();
+        modelMapper.map(messageRequest, newMessage);
         newMessage.setChat(chat);
-        newMessage.setContent(messageRequest.getContent());
-        newMessage.setImage(messageRequest.getImage());
         newMessage.setUser(user);
         MessageModel savedMsg = messageRepo.save(newMessage);
         chat.getMessages().add(savedMsg);
@@ -54,7 +55,7 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public GlobalApiResponse<?> findMessagesByChatId(Long chatId, int page, int size) {
 
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
         Page<MessageModel> messageModelPage = messageRepo.findByChatId(chatId, pageable);
 
         List<MessageResponse> messageResponseList = messageModelPage.getContent()

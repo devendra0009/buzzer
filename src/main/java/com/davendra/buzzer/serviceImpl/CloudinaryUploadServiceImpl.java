@@ -43,6 +43,15 @@ public class CloudinaryUploadServiceImpl implements CloudinaryUploadService {
             "video/x-matroska" // MKV
     );
 
+    private static final List<String> allowedAudioTypes = Arrays.asList(
+            "audio/mpeg",  // mp3
+            "audio/mp3",
+            "audio/wav",
+            "audio/webm",  // <— from MediaRecorder API
+            "audio/ogg",
+            "audio/x-wav"
+    );
+
 
     @Override
     public String uploadFile(MultipartFile file) throws IOException {
@@ -67,6 +76,11 @@ public class CloudinaryUploadServiceImpl implements CloudinaryUploadService {
                                     new EagerTransformation().width(160).height(100).crop("crop").gravity("south").audioCodec("none")),
                             "eager_async", true,
                             "eager_notification_url", "https://mysite.example.com/notify_endpoint"));
+        } else if (allowedAudioTypes.contains(contentType) || "application/octet-stream".equals(contentType)) {
+            System.out.println("This is a audio");
+            uploadResult = cloudinary.uploader().upload(file.getBytes(),
+                    ObjectUtils.asMap("folder", "buzzerUploads",
+                            "resource_type", "video"));
         } else {
             throw new IllegalArgumentException("Invalid file type. Only images and videos are allowed.");
         }
