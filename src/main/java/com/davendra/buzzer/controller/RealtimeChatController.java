@@ -27,10 +27,16 @@ public class RealtimeChatController {
 //        return messageModel; // i would've returned if it has a @SendTo queue defined
     }
 
-    @MessageMapping("/call/{groupId}") // client publishes to /app/call/12
+    @MessageMapping("/call/audio/{groupId}") // client publishes to /app/call/12
     public void handleCall(SignalingPayload payload, @DestinationVariable String groupId) {
         // Forward to recipient queue
         // recipient listens on /
-        simpMessagingTemplate.convertAndSend("/calling/" + groupId, payload);
+        simpMessagingTemplate.convertAndSend("/calling/audio" + groupId, payload);
+    }
+    @MessageMapping("/call/video/{groupId}") // client publishes to /app/call/12
+    public void handleVideoCall(SignalingPayload payload, @DestinationVariable String groupId) {
+        // Forward to recipient queue
+        // recipient listens on /
+        simpMessagingTemplate.convertAndSend("/calling/video" + groupId, payload);
     }
 }
