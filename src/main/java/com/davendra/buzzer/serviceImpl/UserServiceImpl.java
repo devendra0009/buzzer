@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.davendra.buzzer.config.JwtProvider.generateToken;
 
@@ -152,6 +153,23 @@ public class UserServiceImpl implements UserService {
     public UserModel findUserByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new NoSuchElementException("User not found with email: " + email));
+    }
+
+    @Override
+    public GlobalApiResponse<?> findUserByUserName(String username) {
+
+        AtomicBoolean exists = new AtomicBoolean(false);
+        userRepository.findByUserName(username).ifPresent(userModel -> {
+            exists.set(true);
+        });
+
+        if (exists.get()) {
+            return new GlobalApiResponse<>(null, "Username already exists", false);
+        }
+
+        return new GlobalApiResponse<>(null, "Username available", true);
+//        return userRepository.findByUserName(username)
+//                .orElseThrow(() -> new NoSuchElementException("User not found with email: " + username));
     }
 
     @Override

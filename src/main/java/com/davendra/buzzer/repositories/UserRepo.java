@@ -13,6 +13,9 @@ import java.util.Optional;
 @Repository
 public interface UserRepo extends JpaRepository<UserModel, Long> {
     Optional<UserModel> findByEmail(String email);
+
+    Optional<UserModel> findByUserName(String username);
+
     Optional<UserModel> findByPhone(String phone);
 
     @Query("SELECT u FROM UserModel u WHERE u.firstName LIKE %:query% OR u.email LIKE %:query% or u.lastName LIKE %:query%")
@@ -23,7 +26,6 @@ public interface UserRepo extends JpaRepository<UserModel, Long> {
             "CASE WHEN :sortBy = 'followers' THEN SIZE(u.followers) ELSE 0 END DESC, " +
             "CASE WHEN :sortBy = 'posts' THEN SIZE(u.posts) ELSE 0 END DESC")
     Page<UserModel> findUsersSorted(@Param("sortBy") String sortBy, Pageable pageable);
-
 
 
 }

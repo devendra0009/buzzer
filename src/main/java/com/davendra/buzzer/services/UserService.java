@@ -24,6 +24,8 @@ public interface UserService {
 
     public UserModel findUserByEmail(String email);
 
+    public GlobalApiResponse<?> findUserByUserName(String username);
+
     public UserModel followUser(Long userId1, Long userId2) throws Exception;
 
     public UserModel updateUserDetails(UserModel user, Long id);

@@ -49,6 +49,7 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
+
     @PutMapping("/{id}")
     public ResponseEntity<UserModel> updateUserDetails(@RequestHeader("Authorization") String token, @RequestBody UserModel userReq) {
         UserModel user = userService.updateUserDetails(userReq, userService.getUserFromToken(token).getId());

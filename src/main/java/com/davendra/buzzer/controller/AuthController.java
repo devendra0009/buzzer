@@ -3,6 +3,7 @@ package com.davendra.buzzer.controller;
 import com.davendra.buzzer.dto.request.LoginRequest;
 import com.davendra.buzzer.dto.request.RegisterRequest;
 import com.davendra.buzzer.dto.response.AuthResponse;
+import com.davendra.buzzer.dto.response.GlobalApiResponse;
 import com.davendra.buzzer.enums.GenderEnum;
 import com.davendra.buzzer.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,5 +40,11 @@ public class AuthController {
     public ResponseEntity<AuthResponse> loginUser(@RequestBody LoginRequest user) {
         AuthResponse registeredUser = userService.loginUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(registeredUser);
+    }
+
+
+    @GetMapping("/validate/userName")
+    public ResponseEntity<GlobalApiResponse<?>> getUserByUserName(@RequestParam String username) {
+        return ResponseEntity.ok(userService.findUserByUserName(username));
     }
 }
