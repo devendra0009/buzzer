@@ -30,10 +30,8 @@ public class MessageModel {
     private ChatModel chat;
 
     @CreationTimestamp
-    @Column(columnDefinition = "datetime")
     private LocalDateTime createdAt;
     @UpdateTimestamp
-    @Column(columnDefinition = "datetime")
     private LocalDateTime updatedAt;
 }
 

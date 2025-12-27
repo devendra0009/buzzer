@@ -36,9 +36,7 @@ public class CommentModel {
     private PostModel post;
 
     @CreationTimestamp
-    @Column(columnDefinition = "datetime")
     private LocalDateTime createdAt;
     @UpdateTimestamp
-    @Column(columnDefinition = "datetime")
     private LocalDateTime updatedAt;
 }

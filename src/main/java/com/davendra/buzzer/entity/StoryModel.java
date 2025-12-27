@@ -26,7 +26,6 @@ public class StoryModel {
 
     private boolean isActive;
 
-    @Column(columnDefinition = "datetime")
     private LocalDateTime deactivatedAt;
 
     @ManyToMany(cascade = CascadeType.ALL)
@@ -37,9 +36,7 @@ public class StoryModel {
     private List<UserModel> seenBy;
 
     @CreationTimestamp
-    @Column(columnDefinition = "datetime")
     private LocalDateTime createdAt;
     @UpdateTimestamp
-    @Column(columnDefinition = "datetime")
     private LocalDateTime updatedAt;
 }
