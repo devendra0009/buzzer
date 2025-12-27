@@ -66,7 +66,8 @@ public class SecurityConfig {
             @Override
             public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                 CorsConfiguration corsConfiguration = new CorsConfiguration();
-                corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://192.168.0.103:3000","https://gm5z27z4-3000.inc1.devtunnels.ms"));
+                corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://192.168.0.103:3000", "https://gm5z27z4-3000.inc1.devtunnels.ms",
+                        "http://buzzer-frontend-dave.s3-website.eu-north-1.amazonaws.com"));
 //                corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
                 corsConfiguration.setAllowedMethods(Collections.singletonList("*"));
                 corsConfiguration.setAllowCredentials(true);
